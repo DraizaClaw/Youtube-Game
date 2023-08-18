@@ -8,7 +8,7 @@ public class TopDownMovement : MonoBehaviour
     public float Speed;
     private Animator anim;
 
-    private bool Idle;
+    private bool PlayerMoving;
     private Vector2 LastMove;
 
 
@@ -26,21 +26,28 @@ public class TopDownMovement : MonoBehaviour
     private void Update()
     {
 
-        Idle = true;
-        if (Input.GetAxis("Horizontal") != 0)
+        PlayerMoving = false;
+        if (Input.GetAxisRaw("Horizontal") < -0.1f ||Input.GetAxisRaw("Horizontal") > 0.1f)
         {
             transform.Translate(new Vector3(Input.GetAxisRaw("Horizontal") * Speed * Time.deltaTime, 0f, 0f));
-            Idle = false;
+            PlayerMoving = true;
+            LastMove = new Vector2(Input.GetAxis("Horizontal"), 0f);
         }
 
-        if (Input.GetAxis("Vertical") != 0)
+        if (Input.GetAxisRaw("Vertical") < -0.1f || Input.GetAxisRaw("Vertical") > 0.1f)
         {
             transform.Translate(new Vector3(0f, Input.GetAxisRaw("Vertical") * Speed * Time.deltaTime, 0f));
-            Idle = false;
+            PlayerMoving = true;
+            LastMove = new Vector2(0f, Input.GetAxis("Vertical"));
         }
 
-        anim.SetFloat("MoveX", Input.GetAxis("Horizontal"));
-        anim.SetFloat("MoveY", Input.GetAxis("Vertical"));
+        anim.SetFloat("MoveX", Input.GetAxisRaw("Horizontal"));
+        anim.SetFloat("MoveY", Input.GetAxisRaw("Vertical"));
+
+        anim.SetFloat("LastMoveX", LastMove.x);
+        anim.SetFloat("LastMoveY", LastMove.y);
+
+        anim.SetBool("PlayerMoving", PlayerMoving); 
     }
 
 
@@ -51,36 +58,7 @@ public class TopDownMovement : MonoBehaviour
 
 
 
-        /*
-        
-        if (Input.GetAxis("Horizontal") < 0)
-        {
-            anim.SetFloat("PlayerLeftMovement", Mathf.Abs(Input.GetAxis("Horizontal")) * -1);
-        }
-        else
-        {
-            anim.SetFloat("PlayerLeftMovement", 0);
-        }
 
-
-
-
-
-        if (Input.GetAxis("Horizontal") > 0)
-        {
-            anim.SetFloat("PlayerRightMovement", Mathf.Abs(Input.GetAxis("Horizontal")));
-        }
-        if (Input.GetAxis("Vertical") > 0)
-        {
-            anim.SetFloat("PlayerDownMovement", Mathf.Abs(Input.GetAxis("Vertical")) * -1);
-        }
-        if (Input.GetAxis("Vertical") < 0)
-        {
-            anim.SetFloat("PlayerUpMovement", Mathf.Abs(Input.GetAxis("Vertical")));
-        }
-
-        */
-        
 
 
 
